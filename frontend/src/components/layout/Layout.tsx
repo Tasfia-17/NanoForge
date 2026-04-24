@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import { Outlet, NavLink } from 'react-router-dom'
 import { LayoutDashboard, Bot, Briefcase, ShoppingBag, ArrowLeftRight, Zap } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -12,31 +12,27 @@ const navItems = [
 
 export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top nav */}
-      <header className="sticky top-0 z-50 px-6 py-3">
-        <div className="glass-card px-5 py-3 flex items-center justify-between max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col relative z-10">
+      <header className="sticky top-0 z-50 px-6 py-4" style={{ backdropFilter: 'blur(24px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
           <NavLink to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{background: 'linear-gradient(135deg, #8b5cf6, #6366f1)'}}>
-              <Zap size={16} className="text-white" />
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+              <Zap size={15} className="text-white" />
             </div>
-            <span className="font-bold text-gray-800 text-lg tracking-tight">NanoForge</span>
+            <span className="font-bold text-white text-lg tracking-tight">NanoForge</span>
             <span className="nano-badge">Arc Testnet</span>
           </NavLink>
 
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map(({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to}
-                to={to}
+              <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
                   'flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-violet-100 text-violet-700'
-                    : 'text-gray-600 hover:bg-white/60 hover:text-gray-800'
-                )}
-              >
-                <Icon size={15} />
+                    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/20'
+                    : 'text-white/40 hover:text-white/70 hover:bg-white/5'
+                )}>
+                <Icon size={14} />
                 {label}
               </NavLink>
             ))}
@@ -52,14 +48,12 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="flex-1 px-6 py-6 max-w-7xl mx-auto w-full">
+      <main className="flex-1 px-6 py-8 max-w-7xl mx-auto w-full">
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="px-6 py-4 text-center text-xs text-gray-400">
-        NanoForge · Built on Arc · Powered by Circle Nanopayments · USDC Settlement
+      <footer className="px-6 py-4 text-center text-xs" style={{ color: 'rgba(255,255,255,0.15)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        NanoForge · Built on Arc · Circle Nanopayments · USDC Settlement
       </footer>
     </div>
   )
