@@ -10,8 +10,6 @@ dist/
 out/
 .DS_Store
 *.log
-demo_local.html
-demo_backend.py
 contracts/out/
 contracts/cache/
 contracts/lib/
