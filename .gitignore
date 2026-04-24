@@ -1,0 +1,15 @@
+.env
+.env.local
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/*.db
+node_modules/
+dist/
+out/
+.DS_Store
+*.log
+contracts/out/
+contracts/cache/
+contracts/lib/
