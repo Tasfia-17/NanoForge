@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background: linear-gradient(135deg, #f0ebff 0%, #e8f4fd 25%, #e4f8f0 50%, #fdf0e8 75%, #fde8f4 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(120, 100, 200, 0.08), 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 16px 48px rgba(120, 100, 200, 0.14), 0 4px 16px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+  }
+
+  .glass-button {
+    @apply rounded-xl px-5 py-2.5 font-medium text-sm transition-all duration-200;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 8px rgba(120, 100, 200, 0.1);
+  }
+
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 16px rgba(120, 100, 200, 0.18);
+    transform: translateY(-1px);
+  }
+
+  .primary-button {
+    @apply rounded-xl px-5 py-2.5 font-semibold text-sm text-white transition-all duration-200;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+  }
+
+  .primary-button:hover {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.45);
+    transform: translateY(-1px);
+  }
+
+  .nano-badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background: rgba(139, 92, 246, 0.12);
+    color: #7c3aed;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+  }
+
+  .arc-badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .usdc-badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background: rgba(37, 99, 235, 0.1);
+    color: #1d4ed8;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+
+  .status-dot.active { @apply bg-emerald-400; }
+  .status-dot.pending { @apply bg-amber-400; }
+  .status-dot.confirmed { @apply bg-violet-400; }
+  .status-dot.failed { @apply bg-rose-400; }
+
+  .tx-row {
+    @apply flex items-center justify-between py-2.5 px-3 rounded-xl text-sm transition-colors;
+    background: rgba(255,255,255,0.4);
+  }
+
+  .tx-row:hover {
+    background: rgba(255,255,255,0.65);
+  }
+
+  .metric-card {
+    @apply glass-card p-5;
+  }
+
+  .metric-value {
+    @apply text-2xl font-bold text-gray-800;
+  }
+
+  .metric-label {
+    @apply text-xs font-medium text-gray-500 uppercase tracking-wide mt-1;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-gray-800;
+  }
+
+  .input-glass {
+    @apply w-full rounded-xl px-4 py-3 text-sm text-gray-800 outline-none transition-all;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+  }
+
+  .input-glass:focus {
+    background: rgba(255,255,255,0.85);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .input-glass::placeholder {
+    @apply text-gray-400;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.4); }
+
+/* Shimmer animation for loading */
+.shimmer-bg {
+  background: linear-gradient(90deg, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
