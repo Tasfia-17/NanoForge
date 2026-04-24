@@ -37,6 +37,7 @@ def create_chat_plan(payload: ChatRequest):
     """
     Use Gemini to reason about the user goal and return USDC-priced execution plans.
     Gemini analyzes complexity, estimates actions, and recommends the best plan.
+    Each action costs $0.001 USDC on Arc via Circle Nanopayments.
     """
     from app.core.config import get_settings
     settings = get_settings()
@@ -46,10 +47,8 @@ def create_chat_plan(payload: ChatRequest):
 
     if settings.gemini_api_key:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=settings.gemini_api_key)
-            model = genai.GenerativeModel(settings.gemini_model)
-
+            from google import genai as google_genai
+            client_g = google_genai.Client(api_key=settings.gemini_api_key)
             prompt = (
                 f"You are a task planner for an AI agent marketplace where every action costs $0.001 USDC on Arc.\n"
                 f"User goal: {payload.user_message}\n\n"
@@ -60,10 +59,10 @@ def create_chat_plan(payload: ChatRequest):
                 f"THOROUGH_SUMMARY: <one sentence, what the thorough plan does>\n"
                 f"REASONING: <one sentence explaining the complexity>"
             )
-            response = model.generate_content(prompt)
+            response = client_g.models.generate_content(model=settings.gemini_model, contents=prompt)
             text = response.text
             gemini_reasoning = _extract_field(text, "REASONING")
-            plans = _parse_gemini_plans(text, payload.user_message) or plans
+            plans = _parse_gemini_plans(text) or plans
         except Exception:
             pass
 
@@ -79,22 +78,12 @@ def create_chat_plan(payload: ChatRequest):
 
 def _default_plans(message: str) -> list[PlanOption]:
     return [
-        PlanOption(
-            plan_id="fast",
-            title="Fast Execution",
-            summary="Single-agent, direct execution. Best for simple tasks.",
-            estimated_actions=5,
-            price_usdc=0.005,
-            price_display="$0.005 USDC",
-        ),
-        PlanOption(
-            plan_id="thorough",
-            title="Thorough Execution",
-            summary="Multi-step with verification. Best for complex tasks.",
-            estimated_actions=12,
-            price_usdc=0.012,
-            price_display="$0.012 USDC",
-        ),
+        PlanOption(plan_id="fast", title="Fast Execution",
+                   summary="Single-agent, direct execution. Best for simple tasks.",
+                   estimated_actions=5, price_usdc=0.005, price_display="$0.005 USDC"),
+        PlanOption(plan_id="thorough", title="Thorough Execution",
+                   summary="Multi-step with verification. Best for complex tasks.",
+                   estimated_actions=12, price_usdc=0.012, price_display="$0.012 USDC"),
     ]
 
 
@@ -105,7 +94,7 @@ def _extract_field(text: str, field: str) -> Optional[str]:
     return None
 
 
-def _parse_gemini_plans(text: str, message: str) -> Optional[list[PlanOption]]:
+def _parse_gemini_plans(text: str) -> Optional[list[PlanOption]]:
     try:
         fast_actions = int(_extract_field(text, "FAST_ACTIONS") or "5")
         fast_summary = _extract_field(text, "FAST_SUMMARY") or "Direct execution."
@@ -114,22 +103,12 @@ def _parse_gemini_plans(text: str, message: str) -> Optional[list[PlanOption]]:
         fast_price = round(fast_actions * 0.001, 4)
         thorough_price = round(thorough_actions * 0.001, 4)
         return [
-            PlanOption(
-                plan_id="fast",
-                title="Fast Execution",
-                summary=fast_summary,
-                estimated_actions=fast_actions,
-                price_usdc=fast_price,
-                price_display=f"${fast_price:.4f} USDC",
-            ),
-            PlanOption(
-                plan_id="thorough",
-                title="Thorough Execution",
-                summary=thorough_summary,
-                estimated_actions=thorough_actions,
-                price_usdc=thorough_price,
-                price_display=f"${thorough_price:.4f} USDC",
-            ),
+            PlanOption(plan_id="fast", title="Fast Execution", summary=fast_summary,
+                       estimated_actions=fast_actions, price_usdc=fast_price,
+                       price_display=f"${fast_price:.4f} USDC"),
+            PlanOption(plan_id="thorough", title="Thorough Execution", summary=thorough_summary,
+                       estimated_actions=thorough_actions, price_usdc=thorough_price,
+                       price_display=f"${thorough_price:.4f} USDC"),
         ]
     except Exception:
         return None
